@@ -1,0 +1,48 @@
+﻿@model IEnumerable<EcommerceProject.Models.Product>
+
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Ảnh</th>
+            <th>Giá</th>
+            <th>Giá khuyến mãi</th>
+            <th>Số lượng</th>
+            <th>Mô tả</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model != null && Model.Any()){
+            var i = 1;
+            foreach(var item in Model){
+                <tr id="trow_@item.Id" class="categoryList">
+                    <td>@i</td>
+                    <td>@item.Title</td>
+                    <td>@item.Category?.Title</td>
+                    <td><img style="max-width: 100px; max-height: 100px;" src="@item.Image" alt=""/></td>
+                    <td>@item.Price VND</td>
+                    @if(@item.PriceSale != null)
+                    {
+                        <td>@item.PriceSale VND</td>                                  
+                    }else{
+                        <td>0</td>
+                    }
+                    <td>@item.TotalQuantity</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <button data-id="@item.Id" class="btn btn-sm btn-success editProduct">Sửa</button>
+                        <button data-id="@item.Id" class="btn btn-sm btn-danger deleteProduct">Xóa</button>
+                    </td>
+                </tr>
+                i++;
+            }
+        } else {
+            <tr>
+                <td colspan="8">Không có sản phẩm</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

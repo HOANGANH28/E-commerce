@@ -1,0 +1,33 @@
+﻿@model EcommerceProject.Models.Category
+@{
+	ViewData["Title"] = "Thêm";
+	Layout = null;
+}
+
+	<div class="card-body p-0">
+		<div class="bs-stepper linear">
+			<div class="bs-stepper-content">
+			@using (Html.BeginForm("Add", "Category", FormMethod.Post, new { }))
+			{
+				@Html.AntiForgeryToken()
+				@Html.ValidationSummary(false)
+				<!-- your steps content here -->
+				<div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+					<div class="form-group">
+						<label>Nhập danh mục</label>
+						@Html.TextBoxFor(x => x.Title,new{@class = "form-control" , @placeholder = "Tên danh mục"})
+						@Html.ValidationMessageFor(x => x.Title , null , new{@class = "text-danger"})
+					</div>
+					<button class="btn btn-primary">Thêm</button>
+					<button class="btn btn-warning closeFormButton">Hủy</button>
+				</div>
+			}
+
+		</div>
+	</div>
+</div>
+
+
+
+
+

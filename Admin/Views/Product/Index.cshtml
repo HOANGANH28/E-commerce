@@ -1,0 +1,194 @@
+﻿@model IEnumerable<EcommerceProject.Models.Product>
+@{
+    ViewData["Title"] = "Admin sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+
+            // Show và đóng form add
+            $(".showFormButton").click(function() {
+                $.get("/admin/product/add", function(data) {
+                    $("#addFormContainer").html(data);
+                    $(".closeFormButton").click(function() {
+                        $("#addFormContainer").html(""); // Xóa nội dung của form
+                    });
+                });
+            });
+
+            // Form sửa
+            $(".editProduct").click(function() {
+                var id = $(this).data("id");
+                $.get("/admin/product/edit/" + id, function(data) {
+                    $("#addFormContainer").html(data);
+                });
+            });
+
+            // Xóa
+            $(".deleteProduct").click(function() {
+                var id = $(this).data("id");
+                var conf = confirm("Bạn có muốn xóa");
+                if(conf === true){
+                    $.ajax({
+                        url: '/admin/product/delete',
+                        type: 'POST',
+                        data: {id : id},
+                        success: function(rs){
+                            if(rs.success){
+                                $('#trow_' + id).remove();
+                            }
+                        }
+                    })                  
+                }              
+            });
+
+             $("#searchKeyword").on("input", function() {
+                var keyword = $(this).val();
+                $.ajax({
+                    url: '/admin/product/search',
+                    type: 'POST',
+                    data: { keyword: keyword },
+                    success: function(data) {
+                        if (data) {
+                            $("#productList").html(data);
+                        } else{
+                            // Hiển thị danh sách sản phẩm bình thường nếu không có dữ liệu tìm kiếm
+                            $.get('/admin/product', function(data) {
+                                $("#productList").html(data);
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+@section naviheader{
+	    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/home" class="nav-link">Trang chủ</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="/admin/product" class="nav-link">Sản phẩm</a>
+        </li>
+    </ul>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Sản phẩm</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+					<li class="breadcrumb-item active">Sản phẩm</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<div class="container-fluid">
+        <div style="margin-bottom: 10px;">
+            <button class="btn btn-outline-info showFormButton">+ Thêm mới</button>
+        </div>
+
+		<div class="card card-default" id="addFormContainer">
+			
+		</div>
+
+		<!-- /.row -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Danh sách sản phẩm</h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input id="searchKeyword" type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0" id="productList">
+                  
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên sản phẩm</th>
+                      <th>Danh mục</th>
+                      <th>Ảnh</th>
+                      <th>Giá</th>
+                      <th>Giá khuyến mãi</th>
+                      <th>Số lượng</th>
+                      <th>Mô tả</th>
+                    </tr>
+                  </thead>
+                  <tbody id="productList">
+					@if(Model != null && Model.Any()){
+                        var i = 1;
+                        foreach(var item in Model){
+						    <tr id="trow_@item.Id">
+							    <td>@i</td>
+							    <td>@item.Title</td>
+                                <td>@item.Category?.Title</td>
+                                <td><img style="max-width: 100px; max-height: 100px;" src="@item.Image" alt=""/></td>
+                                <td>@item.Price VND</td>
+                                @if(@item.PriceSale != null)
+                                {
+                                    <td>@item.PriceSale VND</td>                                  
+                                }else{
+                                    <td>Không sale</td>
+                                }
+                                
+                                <td>@item.TotalQuantity</td>
+                                <td>@item.Description</td>
+                                <td>
+                                    <button data-id="@item.Id" class="btn btn-sm btn-success editProduct">Sửa</button>
+                                    <button data-id="@item.Id" class="btn btn-sm btn-danger deleteProduct">Xóa</button>
+                                </td>
+						    </tr>
+                            i++;
+                        }
+
+					}else{
+						<tr>
+							<td colspan="8">Không có sản phẩm</td>
+						</tr>
+					}
+
+                  </tbody>
+                </table>
+              </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        <!-- /.row -->
+
+	</div>
+	<!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+

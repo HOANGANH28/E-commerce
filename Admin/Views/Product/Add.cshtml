@@ -1,0 +1,98 @@
+﻿@model EcommerceProject.Models.Product
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+    Layout = null;
+}
+
+	<script>
+		$(document).ready(function () {
+			$('#customCheckbox').change(function () {
+				if ($(this).is(":checked")) {
+					$('#salePriceDiv').show();
+				} else {
+					$('#salePriceDiv').hide();
+				}
+			});
+		});
+	</script>
+
+<div class="card-body p-0">
+	<div class="bs-stepper linear">
+		<div class="bs-stepper-content">
+			@using (Html.BeginForm("Add", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+			{
+				@Html.AntiForgeryToken()
+				@Html.ValidationSummary(false)
+
+				<div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label>Nhập tên sản phẩm</label>
+								@Html.TextBoxFor(x => x.Title,new{@class = "form-control" , @placeholder = "Tên sản phẩm"})
+								@Html.ValidationMessageFor(x => x.Title , null , new{@class = "text-danger"})
+							</div>
+						</div>
+
+						<div class="col-6">
+							<div class="form-group">
+								<label>Chọn danh mục sản phẩm</label>
+								@Html.DropDownListFor(x => x.CategoryId , ViewBag.Category as SelectList , new{@class = "form-control" , @placeholder = "danh mục"})
+								@Html.ValidationMessageFor(x => x.CategoryId , null , new{@class = "text-danger"})
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Nhập mô tả</label>
+						@Html.TextAreaFor(x => x.Description,new{@class = "form-control" , @placeholder = "Mô tả"})
+						@Html.ValidationMessageFor(x => x.Description , null , new{@class = "text-danger"})
+					</div>
+
+					<div class="row">
+						<div class="col-4">
+							<div class="form-group">
+								<label>Nhập giá</label>
+								@Html.TextBoxFor(x => x.Price,new{@class = "form-control" , @placeholder = "Giá"})
+								@Html.ValidationMessageFor(x => x.Price , null , new{@class = "text-danger"})
+							</div>
+						</div>
+
+						<div class="col-4">
+							<div class="form-group">
+								<br></br>
+								<div class="custom-control custom-checkbox" style="text-align: center;">
+									@Html.CheckBoxFor(x => x.IsSale , new{@class = "custom-control-input" ,@id = "customCheckbox", @checked = "checked"})									
+									<label for="customCheckbox" class="custom-control-label">Giảm giá</label>
+								</div>
+							</div>
+						</div>
+							
+						<div class="col-4" id="salePriceDiv">
+							<div class="form-group">
+								<label>Nhập giá khuyến mãi</label>
+								@Html.TextBoxFor(x => x.PriceSale,new{@class = "form-control" , @placeholder = "Giá khuyến mãi"})
+								@Html.ValidationMessageFor(x => x.PriceSale , null , new{@class = "text-danger"})
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Nhập số lượng</label>
+						@Html.TextBoxFor(x => x.TotalQuantity,new{@class = "form-control" , @placeholder = "Số lượng"})
+						@Html.ValidationMessageFor(x => x.TotalQuantity , null , new{@class = "text-danger"})
+					</div>
+
+					<div class="form-group">
+						<label>Chọn ảnh sản phẩm</label>
+						<input type="file" id="imageFile" name="imageFile" class="form-control-file" accept="image/*" required />
+						@Html.ValidationMessageFor(x => x.Image, null, new { @class = "text-danger" })
+					</div>
+
+					<button class="btn btn-primary">Thêm</button>
+					<button class="btn btn-warning closeFormButton">Hủy</button>
+				</div>
+			}
+		</div>
+	</div>
+</div>
