@@ -1,0 +1,35 @@
+﻿@model EcommerceProject.Models.Comment
+@{
+    ViewData["Title"] = "View";
+    Layout = null;
+}
+
+<form action="@Url.Action("Comment", "Home")" method="post">
+                                    <h4 class="mb-5 fw-bold">Hãy đánh giá sản phẩm</h4>
+                                    <div class="row g-4">
+                                        <div class="col-lg-12">
+                                            <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                                            <input type="hidden" name="UserId" value="@Model.UserId" />
+
+                                            <div class="border-bottom rounded my-4">
+                                                <textarea name="Content" id="" class="form-control border-0" cols="30" rows="8" placeholder="Bình luận" spellcheck="false"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="d-flex justify-content-between py-3 mb-5">
+                                                <div class="d-flex align-items-center">
+                                                    <p class="mb-0 me-3">Please rate:</p>
+                                                    <div class="d-flex align-items-center" style="font-size: 12px;">
+                                                        <i class="fa fa-star text-muted"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                </div>                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3"> Gửi đánh giá</button>
+                                </form>
+

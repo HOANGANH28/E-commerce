@@ -1,0 +1,16 @@
+﻿@model IEnumerable<EcommerceProject.Models.Product>
+
+@if (Model != null && Model.Any()){
+    foreach(var item in Model){
+        <table>
+            <tbody>
+                <tr>
+                    <td><img style="max-width: 100px; max-height: 100px;" src="@item.Image" alt=""/></td>
+                    <td><a href="@Url.Action("Detail", "Home", new { id = item.Id })">@item.Title</a></td>
+                </tr>
+            </tbody>
+        </table> 
+    }
+}
+
+
